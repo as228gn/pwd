@@ -21,7 +21,7 @@ template.innerHTML = `
         display: block;
     }  
 </style>
-  <div id="card">
+  <div id="card" class="card">
   </div>
 `
 
@@ -31,7 +31,6 @@ customElements.define('flipping-card',
    */
   class extends HTMLElement {
     #card
-    #sameImageController = []
 
     /**
      * Creates an instance of the current type.
@@ -54,8 +53,10 @@ customElements.define('flipping-card',
     flipHandler () {
       const image = this.getAttribute('image')
       this.#card.style.backgroundImage = `url('${image}')`
-      this.#sameImageController.push(image)
-      console.log(this.#sameImageController)
+      const id = this.getAttribute('data-id')
+      const ev = new CustomEvent('checkCard',
+        { detail: { card: image, cardId: id } })
+      this.dispatchEvent(ev)
     }
   }
 )

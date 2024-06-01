@@ -11,23 +11,25 @@ import '../flipping-card'
 const template = document.createElement('template')
 template.innerHTML = `
 <style>
-  #game {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* Anpassa efter behov */
-    gap: 10px;
-  }
+.grid-container {
+  display: grid;
+  position: relative;
+  grid-template-columns: repeat(7, 1fr); /* Justera antalet kolumner beroende på hur du vill arrangera korten */
+  gap: 10px; /* Avstånd mellan rutorna */
+}
   .pair {
     background-color: rgb(229, 138, 237);
     width: 150px;
     height: 200px;
     border-radius: 10px;
   }
-  .notPair {
-    background-image: url('../images/lnu-symbol.png');
-  }
+
+  .invisible {
+    visibility: hidden;
+}
     
 </style>
-  <div id="game">
+  <div id="game" class="grid-container">
   </div>
 `
 
@@ -74,6 +76,7 @@ customElements.define('memory-game',
         const card = document.createElement('flipping-card')
         card.setAttribute('image', image)
         card.setAttribute('data-id', count)
+        // card.style.position('absolute')
         sortedCards.push(card)
 
         const card2 = document.createElement('flipping-card')
@@ -83,8 +86,19 @@ customElements.define('memory-game',
 
         count++
       })
-      //sortedCards.sort(() => Math.random() - 0.5)
-      sortedCards.forEach((card) => {
+      sortedCards.sort(() => Math.random() - 0.5)
+      const positions = [
+        [1, 1], [1, 2], [1, 3], [1, 4],
+        [2, 1], [2, 2], [2, 3], [2, 4],
+        [3, 1], [3, 2], [3, 3], [3, 4],
+        [4, 1], [4, 2], [4, 3], [4, 4],
+        [5, 1], [5, 2], [5, 3], [5, 4],
+        [6, 1], [6, 2], [6, 3], [6, 4]
+      ]
+      sortedCards.forEach((card, index) => {
+        const [row, col] = positions[index]
+        card.style.gridRow = row
+        card.style.gridColumn = col
         this.#game.appendChild(card)
         card.addEventListener('checkCard', (event) => { this.checkImages(event) })
       })
@@ -92,12 +106,12 @@ customElements.define('memory-game',
 
     checkImages(event) {
       const currentFlippedCards = this.shadowRoot.querySelectorAll('.flipped')
-console.log(currentFlippedCards)
       if (currentFlippedCards.length > 1) {
         currentFlippedCards.forEach((card) => {
           card.classList.remove('flipped')
           card.shadowRoot.querySelector('.card').style.removeProperty('background-image')
         })
+        this.#imageToCheck = ''
       }
 
       event.target.classList.add('flipped')
@@ -108,13 +122,13 @@ console.log(currentFlippedCards)
           const cards = this.shadowRoot.querySelectorAll('[data-id="' + event.detail.cardId + '"]')
 
           cards.forEach((card) => {
-            //card.classList.add('pair')
+            card.classList.add('pair')
             card.classList.remove('flipped')
-            // setTimeout(function () {
-            //   if (card) {
-            //     card.remove()
-            //   }
-            // }, 2000)
+            setTimeout(function () {
+              if (card) {
+                card.classList.add('invisible')
+              }
+            }, 2000)
           })
           this.#imageToCheck = ''
         }

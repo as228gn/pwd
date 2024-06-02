@@ -48,6 +48,7 @@ customElements.define('flipping-card',
 
     connectedCallback () {
       this.#card.addEventListener('click', (event) => { this.flipHandler() })
+      this.#card.addEventListener('keydown', (event) => { this.flipHandler() })
     }
 
     flipHandler () {

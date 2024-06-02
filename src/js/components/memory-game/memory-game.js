@@ -13,7 +13,6 @@ template.innerHTML = `
 <style>
 .grid-container {
   display: grid;
-  position: relative;
   grid-template-columns: repeat(7, 1fr); /* Justera antalet kolumner beroende på hur du vill arrangera korten */
   gap: 10px; /* Avstånd mellan rutorna */
 }
@@ -29,8 +28,8 @@ template.innerHTML = `
 }
     
 </style>
-  <div id="game" class="grid-container">
-  </div>
+  <div id="game" class="grid-container"></div>
+  <div id="playAgain"><input type="text"></div>
 `
 
 customElements.define('memory-game',
@@ -40,6 +39,7 @@ customElements.define('memory-game',
   class extends HTMLElement {
     #game
     #imageToCheck = ''
+    #attemptedTries = []
 
     /**
      * Creates an instance of the current type.
@@ -68,20 +68,20 @@ customElements.define('memory-game',
         '../images/4.png',
         '../images/5.png',
         '../images/6.png',
-        '../images/7.png',
-        '../images/8.png']
+        '../images/7.png']
       let count = 1
       const sortedCards = []
       cards.forEach((image) => {
         const card = document.createElement('flipping-card')
         card.setAttribute('image', image)
         card.setAttribute('data-id', count)
-        // card.style.position('absolute')
+        card.classList.add('start')
         sortedCards.push(card)
 
         const card2 = document.createElement('flipping-card')
         card2.setAttribute('image', image)
         card2.setAttribute('data-id', count)
+        card2.classList.add('start')
         sortedCards.push(card2)
 
         count++
@@ -91,9 +91,7 @@ customElements.define('memory-game',
         [1, 1], [1, 2], [1, 3], [1, 4],
         [2, 1], [2, 2], [2, 3], [2, 4],
         [3, 1], [3, 2], [3, 3], [3, 4],
-        [4, 1], [4, 2], [4, 3], [4, 4],
-        [5, 1], [5, 2], [5, 3], [5, 4],
-        [6, 1], [6, 2], [6, 3], [6, 4]
+        [4, 1], [4, 2], [4, 3], [4, 4]
       ]
       sortedCards.forEach((card, index) => {
         const [row, col] = positions[index]
@@ -105,6 +103,7 @@ customElements.define('memory-game',
     }
 
     checkImages(event) {
+      this.#attemptedTries.push(event.detail.cardId)
       const currentFlippedCards = this.shadowRoot.querySelectorAll('.flipped')
       if (currentFlippedCards.length > 1) {
         currentFlippedCards.forEach((card) => {
@@ -133,6 +132,16 @@ customElements.define('memory-game',
           this.#imageToCheck = ''
         }
       }
+
+      const cards = this.shadowRoot.querySelectorAll('.start')
+      if (this.isGameFinnished(cards)) {
+        const tries = this.#attemptedTries.length / 2
+        console.log('Du klarade det på ' + tries + ' försök!')
+      }
+    }
+
+    isGameFinnished (cards) {
+      return Array.from(cards).every(card => card.classList.contains('pair'))
     }
   }
 )

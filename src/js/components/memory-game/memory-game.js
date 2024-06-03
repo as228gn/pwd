@@ -26,11 +26,20 @@ template.innerHTML = `
   .invisible {
     visibility: hidden;
 }
+
+.tries {
+  display: none;
+}
     
 </style>
-  <div id="game" class="grid-container"></div>
-  <div id="playAgain"><input type="text"></div>
-`
+ <div>
+  <button id="game16">Spela med 16 brickor</button>
+  <button id="game8">Spela med 8 brickor</button>
+  <button id="game4">Spela med 4 brickor</button>
+</div>
+<h1 id="triesDiv" class="tries"></h1>
+<div id="game" class="grid-container"></div>
+  `
 
 customElements.define('memory-game',
   /**
@@ -40,6 +49,28 @@ customElements.define('memory-game',
     #game
     #imageToCheck = ''
     #attemptedTries = []
+    #game16
+    #game8
+    #game4
+    #cards16 = [
+      '../images/0.png',
+      '../images/1.png',
+      '../images/2.png',
+      '../images/3.png',
+      '../images/4.png',
+      '../images/5.png',
+      '../images/6.png',
+      '../images/7.png']
+
+    #cards8 = [
+      '../images/0.png',
+      '../images/1.png',
+      '../images/2.png',
+      '../images/3.png']
+
+    #cards4 = [
+      '../images/0.png',
+      '../images/1.png']
 
     /**
      * Creates an instance of the current type.
@@ -53,22 +84,18 @@ customElements.define('memory-game',
         .appendChild(template.content.cloneNode(true))
 
       this.#game = this.shadowRoot.querySelector('#game')
+      this.#game16 = this.shadowRoot.querySelector('#game16')
+      this.#game8 = this.shadowRoot.querySelector('#game8')
+      this.#game4 = this.shadowRoot.querySelector('#game4')
     }
 
     connectedCallback() {
-      this.renderCards()
+      this.#game16.addEventListener('click', (event) => { this.renderCards(this.#cards16) })
+      this.#game8.addEventListener('click', (event) => { this.renderCards(this.#cards8) })
+      this.#game4.addEventListener('click', (event) => { this.renderCards(this.#cards4) })
     }
 
-    renderCards() {
-      const cards = [
-        '../images/0.png',
-        '../images/1.png',
-        '../images/2.png',
-        '../images/3.png',
-        '../images/4.png',
-        '../images/5.png',
-        '../images/6.png',
-        '../images/7.png']
+    renderCards(cards) {
       let count = 1
       const sortedCards = []
       cards.forEach((image) => {
@@ -135,8 +162,10 @@ customElements.define('memory-game',
 
       const cards = this.shadowRoot.querySelectorAll('.start')
       if (this.isGameFinnished(cards)) {
-        const tries = this.#attemptedTries.length / 2
-        console.log('Du klarade det på ' + tries + ' försök!')
+        const attempts = this.#attemptedTries.length / 2
+        const tries = this.shadowRoot.getElementById('triesDiv')
+        tries.textContent = 'Du klarade det på ' + attempts + ' försök!'
+        tries.classList.remove('tries')
       }
     }
 

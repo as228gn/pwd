@@ -21,7 +21,7 @@ template.innerHTML = `
         display: block;
     }  
 </style>
-  <div id="card" class="card">
+  <a href="#" id="card" class="card"></a>
   </div>
 `
 
@@ -48,7 +48,6 @@ customElements.define('flipping-card',
 
     connectedCallback () {
       this.#card.addEventListener('click', (event) => { this.flipHandler() })
-      this.#card.addEventListener('keydown', (event) => { this.flipHandler() })
     }
 
     flipHandler () {

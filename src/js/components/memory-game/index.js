@@ -5,4 +5,4 @@
  * @version 1.0.0
  */
 
-import './memory-game.js'
+import './memory-game'

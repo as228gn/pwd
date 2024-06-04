@@ -22,7 +22,6 @@ template.innerHTML = `
     }  
 </style>
   <a href="#" id="card" class="card"></a>
-  </div>
 `
 
 customElements.define('flipping-card',

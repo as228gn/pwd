@@ -10,8 +10,10 @@ const template = document.createElement('template')
 template.innerHTML = `
 <style> 
 #chatBox {
-  width: 100px;
-  height: 50px;
+  width: 500px;
+  height: 100px;
+  border: solid black;
+  overflow: scroll;
 }
 
 #message {
@@ -25,9 +27,9 @@ template.innerHTML = `
 </style>
   <input id="userName" type="text" placeholder="Skriv ditt username">
   <div id="user"></div>
-  <input id="message" type="text" placeholder="Skriv ditt meddelande">
   <input id="sendButton" type="button" value="Skicka">
   <div id="chatBox"></div>
+  <input id="message" type="text" placeholder="Skriv ditt meddelande">
   
 `
 

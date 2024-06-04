@@ -6,3 +6,4 @@
  */
 import './components/memory-game/index.js'
 import './components/chat-application/index.js'
+import './components/window-component/index.js'

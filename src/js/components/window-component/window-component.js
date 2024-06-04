@@ -18,6 +18,7 @@ template.innerHTML = `
   box-shadow: 0 0 10px rgba(0,0,0,0.1);
   cursor: grab;
   overflow: scroll;
+  z-index: 1;
 }
 
 .header {
@@ -74,8 +75,14 @@ customElements.define('window-component',
     dragMouseDown (event) {
       event.preventDefault()
 
-      this.#abortController = new AbortController()
+      const ev = new CustomEvent('zIndex', {
+        bubbles: true,
+        composed: true
+      })
 
+      this.dispatchEvent(ev)
+
+      this.#abortController = new AbortController()
       this.#pos3 = event.clientX
       this.#pos4 = event.clientY
 
@@ -90,7 +97,7 @@ customElements.define('window-component',
       this.#pos2 = this.#pos4 - event.clientY
       this.#pos3 = event.clientX
       this.#pos4 = event.clientY
-      console.log('hej')
+
       // Uppdatera elementets position
       this.#window.style.top = (this.#window.offsetTop - this.#pos2) + 'px'
       this.#window.style.left = (this.#window.offsetLeft - this.#pos1) + 'px'

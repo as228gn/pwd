@@ -33,7 +33,7 @@ template.innerHTML = `
 } 
 </style>
 <div class="window">
-  <div id="header" class="header">Click here to move</div>
+  <div id="header" class="header">Click here to move <button class="close">X</button></div>
   <div class="content">
   </div>
 </div>
@@ -46,6 +46,7 @@ customElements.define('window-component',
   class extends HTMLElement {
     #window
     #header
+    #close
     #abortController
     #pos1 = 0
     #pos2 = 0
@@ -66,10 +67,17 @@ customElements.define('window-component',
       this.#abortController = new AbortController()
       this.#window = this.shadowRoot.querySelector('.window')
       this.#header = this.shadowRoot.querySelector('.header')
+      this.#close = this.shadowRoot.querySelector('.close')
     }
 
     connectedCallback () {
       this.#header.addEventListener('mousedown', (event) => { this.dragMouseDown(event) })
+      this.#close.addEventListener('click', (event) => { this.removeFromDom(event) })
+    }
+
+    removeFromDom () {
+      const component = this
+      component.parentNode.removeChild(component)
     }
 
     dragMouseDown (event) {

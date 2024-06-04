@@ -20,17 +20,28 @@ template.innerHTML = `
   width: 500px;
   height: 50px;
 }
+#cursive {
+  font-family: cursive;
+}
+#lucida {
+  font-family: Lucida Console;
+}
+#helvetica {
+  font-family: Helvetica;
+}
 
 .hidden {
   display: none;
  }
 </style>
-  <input id="userName" type="text" placeholder="Skriv ditt username">
   <div id="user"></div>
   <input id="sendButton" type="button" value="Skicka">
   <div id="chatBox"></div>
   <input id="message" type="text" placeholder="Skriv ditt meddelande">
-  
+  <input id="userName" class="hidden" type="text" placeholder="Skriv ditt username">
+  <button id="cursive">Text</button>
+  <button id="lucida">Text</button>
+  <button id="helvetica">Text</button>
 `
 
 customElements.define('chat-application',
@@ -43,6 +54,9 @@ customElements.define('chat-application',
     #socket
     #chatBox
     #userName
+    #cursive
+    #lucida
+    #helvetica
     /**
      * Creates an instance of the current type.
      */
@@ -58,6 +72,9 @@ customElements.define('chat-application',
       this.#sendButton = this.shadowRoot.querySelector('#sendButton')
       this.#chatBox = this.shadowRoot.querySelector('#chatBox')
       this.#userName = this.shadowRoot.querySelector('#userName')
+      this.#cursive = this.shadowRoot.querySelector('#cursive')
+      this.#lucida = this.shadowRoot.querySelector('#lucida')
+      this.#helvetica = this.shadowRoot.querySelector('#helvetica')
     }
 
     connectedCallback() {
@@ -66,12 +83,43 @@ customElements.define('chat-application',
       this.#sendButton.addEventListener('click', (event) => { this.sendMessage() })
       this.#message.addEventListener('keydown', (event) => { if (event.key === 'Enter') { this.sendMessage() } })
       this.#socket.addEventListener('message', (event) => { this.recievedMessage(event) })
+      this.checkUserName()
+      this.#cursive.addEventListener('click', (event) => { this.changeText() })
+      this.#lucida.addEventListener('click', (event) => { this.changeTexts() })
+      this.#helvetica.addEventListener('click', (event) => { this.changeTextss() })
+    }
+
+    changeText () {
+      this.#message.style.fontFamily = 'cursive'
+      this.#chatBox.style.fontFamily = 'cursive'
+    }
+
+    changeTexts () {
+      this.#message.style.fontFamily = 'Lucida Console'
+      this.#chatBox.style.fontFamily = 'Lucida Console'
+    }
+
+    changeTextss () {
+      this.#message.style.fontFamily = 'Helvetica'
+      this.#chatBox.style.fontFamily = 'Helvetica'
+    }
+
+    checkUserName () {
+      const userNames = JSON.parse(window.localStorage.getItem('Username'))
+      if (userNames === '' || userNames === null) {
+        this.#userName.classList.remove('hidden')
+      } else {
+        const user = this.shadowRoot.querySelector('#user')
+        user.textContent = 'Välkommen ' + userNames
+        this.#userName.classList.add('hidden')
+      }
     }
 
     collectUserName () {
       const userName = this.#userName.value
+      window.localStorage.setItem('Username', JSON.stringify(userName))
       const user = this.shadowRoot.querySelector('#user')
-      user.textContent = 'Användare: ' + userName
+      user.textContent = 'Välkommen ' + userName
       this.#userName.classList.add('hidden')
     }
 

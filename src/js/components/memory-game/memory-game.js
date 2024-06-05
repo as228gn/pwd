@@ -13,8 +13,8 @@ template.innerHTML = `
 <style>
 .grid-container {
   display: grid;
-  grid-template-columns: repeat(7, 1fr); /* Justera antalet kolumner beroende på hur du vill arrangera korten */
   gap: 10px;
+  margin-top: 20px;
 }
   .pair {
     background-color: rgb(229, 138, 237);
@@ -30,16 +30,29 @@ template.innerHTML = `
 .tries {
   display: none;
 }
+
+.container {
+  display: flex;
+  justify-content: center;
+}
+
+.hidden {
+  display: none;
+ }
     
 </style>
- <div>
-  <button id="game16">Spela med 16 brickor</button>
-  <button id="game8">Spela med 8 brickor</button>
-  <button id="game4">Spela med 4 brickor</button>
+<audio id="victorySound" src="../audio/cheer.wav"></audio>
+<div class="container">
+  <div id="gameButtons">
+    <button id="game16">Spela med 16 brickor</button>
+    <button id="game8">Spela med 8 brickor</button>
+    <button id="game4">Spela med 4 brickor</button>
+  </div>
+</div>
+<div class="container">  
+  <div id="game" class="grid-container"></div>
 </div>
 <h1 id="triesDiv" class="tries"></h1>
-<audio id="victorySound" src="../audio/cheer.wav"></audio>
-<div id="game" class="grid-container"></div>
   `
 
 customElements.define('memory-game',
@@ -54,6 +67,7 @@ customElements.define('memory-game',
     #game8
     #game4
     #victorySound
+    #triesDiv
     #cards16 = [
       '../images/0.png',
       '../images/1.png',
@@ -90,6 +104,7 @@ customElements.define('memory-game',
       this.#game8 = this.shadowRoot.querySelector('#game8')
       this.#game4 = this.shadowRoot.querySelector('#game4')
       this.#victorySound = this.shadowRoot.querySelector('#victorySound')
+      this.#triesDiv = this.shadowRoot.querySelector('#triesDiv')
     }
 
     connectedCallback() {
@@ -99,6 +114,7 @@ customElements.define('memory-game',
     }
 
     renderCards(cards) {
+      this.#triesDiv.classList.add('hidden')
       let count = 1
       const sortedCards = []
       cards.forEach((image) => {
@@ -170,6 +186,7 @@ customElements.define('memory-game',
         tries.textContent = 'Du klarade det på ' + attempts + ' försök!'
         tries.classList.remove('tries')
         this.playVictorySound()
+        this.#triesDiv.classList.remove('hidden')
       }
     }
 

@@ -33,9 +33,6 @@ template.innerHTML = `
   padding: 10px;
 } 
 
-.close {
-
-}
 </style>
 <div class="window">
   <div id="header" class="header"><button class="close">X</button></div>

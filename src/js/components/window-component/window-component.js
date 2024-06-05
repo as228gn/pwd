@@ -22,8 +22,9 @@ template.innerHTML = `
 }
 
 .header {
+  display: flex;
+  justify-content: right;
   background-color: #2196F3;
-  color: #fff;
   padding: 10px;
   cursor: move;
 }
@@ -31,9 +32,13 @@ template.innerHTML = `
 .content {
   padding: 10px;
 } 
+
+.close {
+
+}
 </style>
 <div class="window">
-  <div id="header" class="header">Click here to move <button class="close">X</button></div>
+  <div id="header" class="header"><button class="close">X</button></div>
   <div class="content">
   </div>
 </div>

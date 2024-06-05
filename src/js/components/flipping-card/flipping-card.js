@@ -10,8 +10,8 @@ const template = document.createElement('template')
 template.innerHTML = `
 <style>
     #card {
-        width: 150px;
-        height: 200px;
+        width: 70px;
+        height: 90px;
         border: solid black;
         border-radius: 10px;
         background-image: url('../images/lnu-symbol.png');

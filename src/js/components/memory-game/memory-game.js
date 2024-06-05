@@ -14,12 +14,12 @@ template.innerHTML = `
 .grid-container {
   display: grid;
   grid-template-columns: repeat(7, 1fr); /* Justera antalet kolumner beroende på hur du vill arrangera korten */
-  gap: 10px; /* Avstånd mellan rutorna */
+  gap: 10px;
 }
   .pair {
     background-color: rgb(229, 138, 237);
-    width: 150px;
-    height: 200px;
+    width: 70px;
+    height: 90px;
     border-radius: 10px;
   }
 
@@ -38,6 +38,7 @@ template.innerHTML = `
   <button id="game4">Spela med 4 brickor</button>
 </div>
 <h1 id="triesDiv" class="tries"></h1>
+<audio id="victorySound" src="../audio/cheer.wav"></audio>
 <div id="game" class="grid-container"></div>
   `
 
@@ -52,6 +53,7 @@ customElements.define('memory-game',
     #game16
     #game8
     #game4
+    #victorySound
     #cards16 = [
       '../images/0.png',
       '../images/1.png',
@@ -87,6 +89,7 @@ customElements.define('memory-game',
       this.#game16 = this.shadowRoot.querySelector('#game16')
       this.#game8 = this.shadowRoot.querySelector('#game8')
       this.#game4 = this.shadowRoot.querySelector('#game4')
+      this.#victorySound = this.shadowRoot.querySelector('#victorySound')
     }
 
     connectedCallback() {
@@ -166,11 +169,17 @@ customElements.define('memory-game',
         const tries = this.shadowRoot.getElementById('triesDiv')
         tries.textContent = 'Du klarade det på ' + attempts + ' försök!'
         tries.classList.remove('tries')
+        this.playVictorySound()
       }
     }
 
     isGameFinnished (cards) {
       return Array.from(cards).every(card => card.classList.contains('pair'))
+    }
+
+    playVictorySound() {
+      this.#victorySound.play()
+      console.log('spela')
     }
   }
 )

@@ -12,16 +12,35 @@ template.innerHTML = `
 #bath {
   color: rgb(60, 116, 220);
 }
+.vaal {
+  padding: 10px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+
+#containerVaal {
+  height: 100px;
+}
+
+#container {
+  width: 590px;
+  height: 490px;
+  font-family: sans-serif;
+}
+
 </style>
-<h1 id="bath">Badinfo Kalmar och Öland</h1>
-<div>Välj badplats</div>
-<select id="dropDown">Namn</select>
-<div>Vattentemperatur</div>
-<div id="temp"></div>
-<div>Algblommning</div>
-<div id="algae"></div>
-<div>Information om badplatsen</div>
-<div id="info"></div>
+<div id="container">
+  <h1 id="bath">Badinfo Kalmar och Öland</h1>
+  <div>Välj badplats</div>
+  <select id="dropDown">Namn</select>
+  <div id="containerVaal">  
+    <div class="vaal" id="temp"></div>
+    <div class="vaal" id="algae"></div>
+  </div>  
+  <h2 class="bathTitle">Information om badplatsen</h2>
+  <div id="info"></div>
+</div>  
 `
 
 customElements.define('bath-temperature',
@@ -100,8 +119,8 @@ customElements.define('bath-temperature',
       const temp = response.sampleTemperature
       const algae = response.algalText
       const info = response.bathInformation
-      this.#temp.textContent = temp + ' °C'
-      this.#algae.textContent = algae
+      this.#temp.textContent = 'Vattentemperatur: ' + temp + '°C'
+      this.#algae.textContent = 'Algblommning: ' + algae
       this.#info.textContent = info
     }
   }

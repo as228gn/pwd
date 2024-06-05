@@ -7,6 +7,7 @@
 import './components/memory-game/index.js'
 import './components/chat-application/index.js'
 import './components/window-component/index.js'
+import './components/bath-temperature/index.js'
 
 document.addEventListener('zIndex', (event) => { 
   let highestIndex = 1
@@ -26,9 +27,12 @@ document.addEventListener('zIndex', (event) => {
   event.target.shadowRoot.querySelector('.window').style.zIndex = highestIndex
 })
 
-const windowComponentButton = document.getElementById('windowComponentButton')
+const windowComponentButton = document.getElementById('bathButton')
 windowComponentButton.addEventListener('click', () => {
   const newWindow = document.createElement('window-component')
+  const newMemory = document.createElement('bath-temperature')
+  const content = newWindow.shadowRoot.querySelector('.content')
+  content.appendChild(newMemory)
   document.body.appendChild(newWindow)
 })
 

@@ -11,8 +11,8 @@ template.innerHTML = `
 <style>
 .window {
   position: absolute;
-  width: 500px;
-  height: 400px;
+  width: 600px;
+  height: 500px;
   border: 1px solid #000;
   background-color: #f1f1f1;
   box-shadow: 0 0 10px rgba(0,0,0,0.1);

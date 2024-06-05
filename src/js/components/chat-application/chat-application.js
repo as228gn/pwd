@@ -11,14 +11,28 @@ template.innerHTML = `
 <style> 
 #chatBox {
   width: 500px;
-  height: 100px;
+  height: 200px;
   border: solid black;
   overflow: scroll;
+  margin-bottom: 20px;
+}
+
+.container {
+  margin-left: 35px;
+}
+
+#sendButton{
+  margin-top: 10px;
+  margin-bottom: 20px;
 }
 
 #message {
   width: 500px;
   height: 50px;
+}
+
+.choseTypeDiv {
+  margin-top: 10px;
 }
 #cursive {
   font-family: cursive;
@@ -34,14 +48,19 @@ template.innerHTML = `
   display: none;
  }
 </style>
+<div class="container">
   <div id="user"></div>
-  <input id="sendButton" type="button" value="Skicka">
   <div id="chatBox"></div>
   <input id="message" type="text" placeholder="Skriv ditt meddelande">
-  <input id="userName" class="hidden" type="text" placeholder="Skriv ditt username">
+  <input id="sendButton" type="button" value="Skicka">
+</div>
+<input id="userName" class="hidden" type="text" placeholder="Välj användarnamn">
+<div class="choseTypeDiv" >Välj ditt typsnitt</div>
+<div>
   <button id="cursive">Text</button>
   <button id="lucida">Text</button>
   <button id="helvetica">Text</button>
+</div>
 `
 
 customElements.define('chat-application',

@@ -39,14 +39,28 @@ template.innerHTML = `
 .hidden {
   display: none;
  }
+
+ #triesDiv {
+  margin-left: 100px;
+ }
+
+ .buttonGame {
+ padding: 10px 20px;
+ font-size: 14px;
+ color: white;
+ background-color: cadetblue;
+ border: none;
+ border-radius: 5px;
+ cursor: pointer;
+ }
     
 </style>
 <audio id="victorySound" src="../audio/cheer.wav"></audio>
 <div class="container">
   <div id="gameButtons">
-    <button id="game16">Spela med 16 brickor</button>
-    <button id="game8">Spela med 8 brickor</button>
-    <button id="game4">Spela med 4 brickor</button>
+    <button class="buttonGame" id="game16">Spela med 16 brickor</button>
+    <button class="buttonGame" id="game8">Spela med 8 brickor</button>
+    <button class="buttonGame" id="game4">Spela med 4 brickor</button>
   </div>
 </div>
 <div class="container">  

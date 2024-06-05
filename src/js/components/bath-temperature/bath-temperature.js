@@ -10,14 +10,13 @@ const template = document.createElement('template')
 template.innerHTML = `
 <style> 
 #bath {
-  color: rgb(60, 116, 220);
+  color: cadetblue;
 }
 .vaal {
   padding: 10px;
   margin-top: 10px;
   margin-bottom: 10px;
 }
-
 
 #containerVaal {
   height: 100px;
@@ -27,6 +26,10 @@ template.innerHTML = `
   width: 590px;
   height: 490px;
   font-family: sans-serif;
+}
+
+.bathTitle {
+  color: cadetblue;
 }
 
 </style>

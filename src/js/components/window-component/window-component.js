@@ -12,9 +12,9 @@ template.innerHTML = `
 .window {
   position: absolute;
   width: 600px;
-  height: 500px;
-  border: 1px solid #000;
-  background-color: #f1f1f1;
+  height: 550px;
+  background-color: white;
+  border: 5px solid grey;
   box-shadow: 0 0 10px rgba(0,0,0,0.1);
   cursor: grab;
   overflow: scroll;
@@ -24,9 +24,11 @@ template.innerHTML = `
 .header {
   display: flex;
   justify-content: right;
-  background-color: #2196F3;
   padding: 10px;
   cursor: move;
+  background: linear-gradient(to bottom, #ccc, #999);
+  padding: 5px;
+  border-bottom: 2px solid #000;
 }
 
 .content {
@@ -75,6 +77,8 @@ customElements.define('window-component',
     connectedCallback () {
       this.#header.addEventListener('mousedown', (event) => { this.dragMouseDown(event) })
       this.#close.addEventListener('click', (event) => { this.removeFromDom(event) })
+      const component = this
+      component.addEventListener('click', (event) => { this.focusOnClick()})
     }
 
     removeFromDom () {
@@ -82,15 +86,19 @@ customElements.define('window-component',
       component.parentNode.removeChild(component)
     }
 
-    dragMouseDown (event) {
-      event.preventDefault()
-
+    focusOnClick () {
       const ev = new CustomEvent('zIndex', {
         bubbles: true,
         composed: true
       })
 
       this.dispatchEvent(ev)
+    }
+
+    dragMouseDown (event) {
+      event.preventDefault()
+
+      this.focusOnClick()
 
       this.#abortController = new AbortController()
       this.#pos3 = event.clientX
@@ -117,6 +125,5 @@ customElements.define('window-component',
       // Ta bort eventlyssnare
       this.#abortController.abort()
     }
-    
   }
 )

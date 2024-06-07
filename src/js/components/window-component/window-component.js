@@ -74,18 +74,29 @@ customElements.define('window-component',
       this.#close = this.shadowRoot.querySelector('.close')
     }
 
+    /**
+     * Eventlistener.
+     */
     connectedCallback () {
       this.#header.addEventListener('mousedown', (event) => { this.dragMouseDown(event) })
       this.#close.addEventListener('click', (event) => { this.removeFromDom(event) })
       const component = this
-      component.addEventListener('click', (event) => { this.focusOnClick()})
+      component.addEventListener('click', (event) => { this.focusOnClick() })
     }
 
+    /**
+     * A function that removes the component from the DOM.
+     *
+     */
     removeFromDom () {
       const component = this
       component.parentNode.removeChild(component)
     }
 
+    /**
+     * A function that gives the component focus if clicked.
+     *
+     */
     focusOnClick () {
       const ev = new CustomEvent('zIndex', {
         bubbles: true,
@@ -95,6 +106,11 @@ customElements.define('window-component',
       this.dispatchEvent(ev)
     }
 
+    /**
+     * A function that gives the component its starting position.
+     *
+     * @param {event} event A mousedown event.
+     */
     dragMouseDown (event) {
       event.preventDefault()
 
@@ -108,7 +124,12 @@ customElements.define('window-component',
       this.shadowRoot.addEventListener('mouseup', (event) => { this.closeDragElement() }, { signal: this.#abortController.signal })
     }
 
-    elementDrag(event) {
+    /**
+     * A function that enables the component to being moved across the DOM.
+     *
+     * @param {event} event A mousemove event.
+     */
+    elementDrag (event) {
       event.preventDefault()
       // Beräkna nya muspositionen
       this.#pos1 = this.#pos3 - event.clientX
@@ -121,7 +142,11 @@ customElements.define('window-component',
       this.#window.style.left = (this.#window.offsetLeft - this.#pos1) + 'px'
     }
 
-    closeDragElement() {
+    /**
+     * Removes the eventlisteners when the component are being dropped.
+     *
+     */
+    closeDragElement () {
       // Ta bort eventlyssnare
       this.#abortController.abort()
     }

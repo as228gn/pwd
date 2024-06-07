@@ -9,10 +9,10 @@ import './components/chat-application/index.js'
 import './components/window-component/index.js'
 import './components/bath-temperature/index.js'
 
-document.addEventListener('zIndex', (event) => { 
+document.addEventListener('zIndex', (event) => {
   let highestIndex = 1
   const components = document.querySelectorAll('window-component')
-  
+
   components.forEach(comp => {
     const div = comp.shadowRoot.querySelector('.window')
     const style = window.getComputedStyle(div)

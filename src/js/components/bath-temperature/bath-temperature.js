@@ -58,7 +58,7 @@ customElements.define('bath-temperature',
     /**
      * Creates an instance of the current type.
      */
-    constructor() {
+    constructor () {
       super()
 
       // Attach a shadow DOM tree to this element and
@@ -72,11 +72,19 @@ customElements.define('bath-temperature',
       this.#info = this.shadowRoot.querySelector('#info')
     }
 
-    connectedCallback() {
+    /**
+     * The function to start with.
+     */
+    connectedCallback () {
       this.getBathLocation()
     }
 
-    async getBathLocation() {
+    /**
+     * A function that fetches the bathlocations in Kalmar and Öland.
+     *
+     *
+     */
+    async getBathLocation () {
       let response = await fetch('https://badplatsen.havochvatten.se/badplatsen/api/feature')
 
       if (!response.ok) {
@@ -96,22 +104,31 @@ customElements.define('bath-temperature',
       this.populateDropdown(extractedData)
     }
 
-    populateDropdown(data) {
-      this.#dropDown.textContent = '' // Rensa befintliga alternativ
+    /**
+     * A function that puts the bathlocations in a dropdown menu.
+     *
+     * @param {Array} data The locations to be put in the dropdown menu.
+     */
+    populateDropdown (data) {
+      this.#dropDown.textContent = ''
 
       data.forEach(item => {
         const option = document.createElement('option')
-        option.value = item.NUTSKOD // Eller annan lämplig egenskap som värde
-        option.text = item.NAMN // Texten som visas i dropdown
+        option.value = item.NUTSKOD
+        option.text = item.NAMN
         this.#dropDown.appendChild(option)
       })
 
       this.#dropDown.addEventListener('change', (event) => { this.findBathTemp(event) })
     }
 
-    async findBathTemp(event) {
+    /**
+     * A function that fetches the information to show.
+     *
+     * @param {event} event An event that contains the value to find the information with.
+     */
+    async findBathTemp (event) {
       const nutskod = event.target.value
-      console.log('Användaren valde:', nutskod)
       let response = await fetch(`${'https://badplatsen.havochvatten.se/badplatsen/api/detail/'}${nutskod}`)
 
       if (!response.ok) {

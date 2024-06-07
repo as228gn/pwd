@@ -94,7 +94,7 @@ customElements.define('chat-application',
     /**
      * Creates an instance of the current type.
      */
-    constructor() {
+    constructor () {
       super()
 
       // Attach a shadow DOM tree to this element and
@@ -113,7 +113,10 @@ customElements.define('chat-application',
       this.#helvetica = this.shadowRoot.querySelector('#helvetica')
     }
 
-    connectedCallback() {
+    /**
+     * Eventlisteners, startconnection to the websocketserver and a checkUserName function to start with.
+     */
+    connectedCallback () {
       this.#socket = new window.WebSocket('wss://courselab.lnu.se/message-app/socket', 'charcords')
       this.#userName.addEventListener('keydown', (event) => { if (event.key === 'Enter') { this.collectUserName() } })
       this.#userNameButton.addEventListener('click', (event) => { this.collectUserName() })
@@ -121,26 +124,42 @@ customElements.define('chat-application',
       this.#message.addEventListener('keydown', (event) => { if (event.key === 'Enter') { this.sendMessage() } })
       this.#socket.addEventListener('message', (event) => { this.recievedMessage(event) })
       this.checkUserName()
-      this.#cursive.addEventListener('click', (event) => { this.changeText() })
-      this.#lucida.addEventListener('click', (event) => { this.changeTexts() })
-      this.#helvetica.addEventListener('click', (event) => { this.changeTextss() })
+      this.#cursive.addEventListener('click', (event) => { this.changeCursive() })
+      this.#lucida.addEventListener('click', (event) => { this.changeLucida() })
+      this.#helvetica.addEventListener('click', (event) => { this.changeHelvetica() })
     }
 
-    changeText () {
+    /**
+     * A function that changes the font to cursive.
+     *
+     */
+    changeCursive () {
       this.#message.style.fontFamily = 'cursive'
       this.#chatBox.style.fontFamily = 'cursive'
     }
 
-    changeTexts () {
+    /**
+     * A function that change the font to Lucida Console.
+     *
+     */
+    changeLucida () {
       this.#message.style.fontFamily = 'Lucida Console'
       this.#chatBox.style.fontFamily = 'Lucida Console'
     }
 
-    changeTextss () {
+    /**
+     * A function that change the font to Helvetica.
+     *
+     */
+    changeHelvetica () {
       this.#message.style.fontFamily = 'Helvetica'
       this.#chatBox.style.fontFamily = 'Helvetica'
     }
 
+    /**
+     * A function that checks if the user already has a username.
+     *
+     */
     checkUserName () {
       const userNames = JSON.parse(window.localStorage.getItem('Username'))
       if (userNames === '' || userNames === null) {
@@ -152,6 +171,10 @@ customElements.define('chat-application',
       }
     }
 
+    /**
+     * A function that collects the username if there are any.
+     *
+     */
     collectUserName () {
       const userName = this.#userName.value
       window.localStorage.setItem('Username', JSON.stringify(userName))
@@ -160,6 +183,11 @@ customElements.define('chat-application',
       this.#userNameDiv.classList.add('hidden')
     }
 
+    /**
+     * A function that puts the recieved message in the chatBox.
+     *
+     * @param {event} event An event that contains the message to put in the chatbox.
+     */
     recievedMessage (event) {
       const answerFromSocket = JSON.parse(event.data)
       const message = document.createElement('div')
@@ -167,7 +195,11 @@ customElements.define('chat-application',
       this.#chatBox.appendChild(message)
     }
 
-    sendMessage() {
+    /**
+     * A function that sends the message to the socketserver.
+     *
+     */
+    sendMessage () {
       const datas = this.#message.value
       const apiKey = 'eDBE76deU7L0H9mEBgxUKVR0VCnq0XBd'
       const userName = this.#userName.value

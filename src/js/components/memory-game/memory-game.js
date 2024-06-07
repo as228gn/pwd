@@ -105,7 +105,7 @@ customElements.define('memory-game',
     /**
      * Creates an instance of the current type.
      */
-    constructor() {
+    constructor () {
       super()
 
       // Attach a shadow DOM tree to this element and
@@ -121,13 +121,21 @@ customElements.define('memory-game',
       this.#triesDiv = this.shadowRoot.querySelector('#triesDiv')
     }
 
-    connectedCallback() {
+    /**
+     * Eventlisteners.
+     */
+    connectedCallback () {
       this.#game16.addEventListener('click', (event) => { this.renderCards(this.#cards16) })
       this.#game8.addEventListener('click', (event) => { this.renderCards(this.#cards8) })
       this.#game4.addEventListener('click', (event) => { this.renderCards(this.#cards4) })
     }
 
-    renderCards(cards) {
+    /**
+     * A function that duplicates the cards, sorts them and puts them in a grid.
+     *
+     * @param {Array} cards The cards to use in the game.
+     */
+    renderCards (cards) {
       this.#triesDiv.classList.add('hidden')
       let count = 1
       const sortedCards = []
@@ -162,7 +170,12 @@ customElements.define('memory-game',
       })
     }
 
-    checkImages(event) {
+    /**
+     * A function that holds the gamelogic, checks if the cards matches, if they do takes them out of the game and if they don´t flipps them back. It also holds the count of your tries.
+     *
+     * @param {event} event A flipped-card event.
+     */
+    checkImages (event) {
       this.#attemptedTries.push(event.detail.cardId)
       const currentFlippedCards = this.shadowRoot.querySelectorAll('.flipped')
       if (currentFlippedCards.length > 1) {
@@ -204,11 +217,21 @@ customElements.define('memory-game',
       }
     }
 
+    /**
+     * A function that checks if the game is finnished.
+     *
+     * @param {Array} cards The cards to be checked.
+     * @returns {boolean} True if all the cards contains class pair.
+     */
     isGameFinnished (cards) {
       return Array.from(cards).every(card => card.classList.contains('pair'))
     }
 
-    playVictorySound() {
+    /**
+     * Plays a victorysound if the game is finnished.
+     *
+     */
+    playVictorySound () {
       this.#victorySound.play()
       console.log('spela')
     }

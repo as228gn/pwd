@@ -45,10 +45,17 @@ customElements.define('flipping-card',
       this.#card = this.shadowRoot.querySelector('#card')
     }
 
+    /**
+     * Eventlistener.
+     */
     connectedCallback () {
       this.#card.addEventListener('click', (event) => { this.flipHandler() })
     }
 
+    /**
+     * A function that flips a card.
+     *
+     */
     flipHandler () {
       const image = this.getAttribute('image')
       this.#card.style.backgroundImage = `url('${image}')`

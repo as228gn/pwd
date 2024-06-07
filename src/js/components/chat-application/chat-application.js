@@ -12,7 +12,7 @@ template.innerHTML = `
 #chatBox {
   width: 500px;
   height: 200px;
-  border: solid black;
+  border: solid cadetblue;
   overflow: scroll;
   margin-bottom: 20px;
 }
@@ -26,9 +26,19 @@ template.innerHTML = `
   margin-bottom: 20px;
 }
 
+#user {
+  font-size: larger;
+  margin-bottom: 20px;
+}
+
 #message {
   width: 500px;
   height: 50px;
+  border: solid cadetblue;
+}
+
+#userNameDiv {
+  margin-bottom: 50px;
 }
 
 .choseTypeDiv {
@@ -53,8 +63,11 @@ template.innerHTML = `
   <div id="chatBox"></div>
   <input id="message" type="text" placeholder="Skriv ditt meddelande">
   <input id="sendButton" type="button" value="Skicka">
+  <div id="userNameDiv" class="hidden">
+    <input id="userName" type="text" placeholder="Välj användarnamn">
+    <button id="userNameButton">Registrera</button>
+  </div>
 </div>
-<input id="userName" class="hidden" type="text" placeholder="Välj användarnamn">
 <div class="choseTypeDiv" >Välj ditt typsnitt</div>
 <div>
   <button id="cursive">Text</button>
@@ -73,6 +86,8 @@ customElements.define('chat-application',
     #socket
     #chatBox
     #userName
+    #userNameDiv
+    #userNameButton
     #cursive
     #lucida
     #helvetica
@@ -91,6 +106,8 @@ customElements.define('chat-application',
       this.#sendButton = this.shadowRoot.querySelector('#sendButton')
       this.#chatBox = this.shadowRoot.querySelector('#chatBox')
       this.#userName = this.shadowRoot.querySelector('#userName')
+      this.#userNameDiv = this.shadowRoot.querySelector('#userNameDiv')
+      this.#userNameButton = this.shadowRoot.querySelector('#userNameButton')
       this.#cursive = this.shadowRoot.querySelector('#cursive')
       this.#lucida = this.shadowRoot.querySelector('#lucida')
       this.#helvetica = this.shadowRoot.querySelector('#helvetica')
@@ -99,6 +116,7 @@ customElements.define('chat-application',
     connectedCallback() {
       this.#socket = new window.WebSocket('wss://courselab.lnu.se/message-app/socket', 'charcords')
       this.#userName.addEventListener('keydown', (event) => { if (event.key === 'Enter') { this.collectUserName() } })
+      this.#userNameButton.addEventListener('click', (event) => { this.collectUserName() })
       this.#sendButton.addEventListener('click', (event) => { this.sendMessage() })
       this.#message.addEventListener('keydown', (event) => { if (event.key === 'Enter') { this.sendMessage() } })
       this.#socket.addEventListener('message', (event) => { this.recievedMessage(event) })
@@ -126,11 +144,11 @@ customElements.define('chat-application',
     checkUserName () {
       const userNames = JSON.parse(window.localStorage.getItem('Username'))
       if (userNames === '' || userNames === null) {
-        this.#userName.classList.remove('hidden')
+        this.#userNameDiv.classList.remove('hidden')
       } else {
         const user = this.shadowRoot.querySelector('#user')
-        user.textContent = 'Välkommen ' + userNames
-        this.#userName.classList.add('hidden')
+        user.textContent = 'Välkommen ' + userNames + '!'
+        this.#userNameDiv.classList.add('hidden')
       }
     }
 
@@ -138,8 +156,8 @@ customElements.define('chat-application',
       const userName = this.#userName.value
       window.localStorage.setItem('Username', JSON.stringify(userName))
       const user = this.shadowRoot.querySelector('#user')
-      user.textContent = 'Välkommen ' + userName
-      this.#userName.classList.add('hidden')
+      user.textContent = 'Välkommen ' + userName + '!'
+      this.#userNameDiv.classList.add('hidden')
     }
 
     recievedMessage (event) {

@@ -9,7 +9,7 @@ Denna komponent hämtar och visar badinformation från ett externt API. Informat
 
 ## API som används är:  
 
-https://badplatsen.havochvatten.se/badplatsen/api/feature
+https://badplatsen.havochvatten.se/badplatsen/api/feature  
 https://badplatsen.havochvatten.se/badplatsen/api/detail/Nutkod
 
 

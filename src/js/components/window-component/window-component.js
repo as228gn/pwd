@@ -16,7 +16,6 @@ template.innerHTML = `
   background-color: white;
   border: 5px solid grey;
   box-shadow: 0 0 10px rgba(0,0,0,0.1);
-  cursor: grab;
   overflow: scroll;
   z-index: 1;
 }
@@ -25,7 +24,7 @@ template.innerHTML = `
   display: flex;
   justify-content: right;
   padding: 10px;
-  cursor: move;
+  cursor: grab;
   background: linear-gradient(to bottom, #ccc, #999);
   padding: 5px;
   border-bottom: 2px solid #000;
@@ -75,7 +74,7 @@ customElements.define('window-component',
     }
 
     /**
-     * Eventlistener.
+     * Eventlisteners.
      */
     connectedCallback () {
       this.#header.addEventListener('mousedown', (event) => { this.dragMouseDown(event) })
@@ -129,15 +128,16 @@ customElements.define('window-component',
      *
      * @param {event} event A mousemove event.
      */
+    // The logic how to move elements around the DOM I got from chatGPT
     elementDrag (event) {
       event.preventDefault()
-      // Beräkna nya muspositionen
+      // Calculate the new position
       this.#pos1 = this.#pos3 - event.clientX
       this.#pos2 = this.#pos4 - event.clientY
       this.#pos3 = event.clientX
       this.#pos4 = event.clientY
 
-      // Uppdatera elementets position
+      // Uppdate the position
       this.#window.style.top = (this.#window.offsetTop - this.#pos2) + 'px'
       this.#window.style.left = (this.#window.offsetLeft - this.#pos1) + 'px'
     }
@@ -147,7 +147,6 @@ customElements.define('window-component',
      *
      */
     closeDragElement () {
-      // Ta bort eventlyssnare
       this.#abortController.abort()
     }
   }

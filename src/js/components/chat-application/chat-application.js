@@ -42,7 +42,8 @@ template.innerHTML = `
 }
 
 .choseTypeDiv {
-  margin-top: 10px;
+  margin-top: 20px;
+  margin-bottom: 5px;
 }
 #cursive {
   font-family: cursive;

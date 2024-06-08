@@ -23,8 +23,6 @@ template.innerHTML = `
 }
 
 #container {
-  width: 590px;
-  height: 490px;
   font-family: sans-serif;
 }
 
@@ -85,23 +83,27 @@ customElements.define('bath-temperature',
      *
      */
     async getBathLocation () {
-      let response = await fetch('https://badplatsen.havochvatten.se/badplatsen/api/feature')
+      try {
+        let response = await fetch('https://badplatsen.havochvatten.se/badplatsen/api/feature')
 
-      if (!response.ok) {
-        console.log(response.status)
+        if (!response.ok) {
+          throw new Error('An error occurred while fetching the data. Status code: ' + response.status)
+        }
+
+        response = await response.json()
+        const data = response.features
+        const selectedFeatures = data.filter(feature => {
+          return feature.properties.KMN_NAMN === 'Kalmar' || feature.properties.KMN_NAMN === 'Mörbylånga' || feature.properties.KMN_NAMN === 'Färjestaden'
+        })
+        const extractedData = selectedFeatures.map(feature => ({
+          NAMN: feature.properties.NAMN,
+          KMN_NAMN: feature.properties.KMN_NAMN,
+          NUTSKOD: feature.properties.NUTSKOD
+        }))
+        this.populateDropdown(extractedData)
+      } catch (error) {
+        console.error(error.message)
       }
-
-      response = await response.json()
-      const data = response.features
-      const selectedFeatures = data.filter(feature => {
-        return feature.properties.KMN_NAMN === 'Kalmar' || feature.properties.KMN_NAMN === 'Mörbylånga' || feature.properties.KMN_NAMN === 'Färjestaden'
-      })
-      const extractedData = selectedFeatures.map(feature => ({
-        NAMN: feature.properties.NAMN,
-        KMN_NAMN: feature.properties.KMN_NAMN,
-        NUTSKOD: feature.properties.NUTSKOD
-      }))
-      this.populateDropdown(extractedData)
     }
 
     /**
@@ -128,20 +130,24 @@ customElements.define('bath-temperature',
      * @param {event} event An event that contains the value to find the information with.
      */
     async findBathTemp (event) {
-      const nutskod = event.target.value
-      let response = await fetch(`${'https://badplatsen.havochvatten.se/badplatsen/api/detail/'}${nutskod}`)
+      try {
+        const nutskod = event.target.value
+        let response = await fetch(`${'https://badplatsen.havochvatten.se/badplatsen/api/detail/'}${nutskod}`)
 
-      if (!response.ok) {
-        console.log(response.status)
+        if (!response.ok) {
+          throw new Error('An error occurred while fetching the data. Status code: ' + response.status)
+        }
+
+        response = await response.json()
+        const temp = response.sampleTemperature
+        const algae = response.algalText
+        const info = response.bathInformation
+        this.#temp.textContent = 'Vattentemperatur: ' + temp + '°C'
+        this.#algae.textContent = 'Algblommning: ' + algae
+        this.#info.textContent = info
+      } catch (error) {
+        console.error(error.message)
       }
-
-      response = await response.json()
-      const temp = response.sampleTemperature
-      const algae = response.algalText
-      const info = response.bathInformation
-      this.#temp.textContent = 'Vattentemperatur: ' + temp + '°C'
-      this.#algae.textContent = 'Algblommning: ' + algae
-      this.#info.textContent = info
     }
   }
 )

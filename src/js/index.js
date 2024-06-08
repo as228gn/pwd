@@ -9,6 +9,7 @@ import './components/chat-application/index.js'
 import './components/window-component/index.js'
 import './components/bath-temperature/index.js'
 
+// Give focus to the component being clicked
 document.addEventListener('zIndex', (event) => {
   let highestIndex = 1
   const components = document.querySelectorAll('window-component')

@@ -16,15 +16,16 @@ template.innerHTML = `
   gap: 10px;
   margin-top: 20px;
 }
-  .pair {
-    background-color: rgb(229, 138, 237);
-    width: 70px;
-    height: 90px;
-    border-radius: 10px;
+
+.pair {
+  background-color: rgb(229, 138, 237);
+  width: 70px;
+  height: 90px;
+  border-radius: 10px;
   }
 
-  .invisible {
-    visibility: hidden;
+.invisible {
+  visibility: hidden;
 }
 
 .tries {
@@ -40,11 +41,16 @@ template.innerHTML = `
   display: none;
  }
 
- #triesDiv {
-  margin-left: 100px;
- }
+.lessHidden {
+  visibility: hidden;
+}
 
- .buttonGame {
+#triesDiv {
+ margin-left: 100px;
+ color: cadetblue;
+}
+
+.buttonGame {
  padding: 10px 20px;
  font-size: 14px;
  color: white;
@@ -52,7 +58,7 @@ template.innerHTML = `
  border: none;
  border-radius: 5px;
  cursor: pointer;
- }
+}
     
 </style>
 <audio id="victorySound" src="../audio/cheer.wav"></audio>
@@ -81,6 +87,7 @@ customElements.define('memory-game',
     #game8
     #game4
     #victorySound
+    #gameButtons
     #triesDiv
     #cards16 = [
       '../images/0.png',
@@ -118,6 +125,7 @@ customElements.define('memory-game',
       this.#game8 = this.shadowRoot.querySelector('#game8')
       this.#game4 = this.shadowRoot.querySelector('#game4')
       this.#victorySound = this.shadowRoot.querySelector('#victorySound')
+      this.#gameButtons = this.shadowRoot.querySelector('#gameButtons')
       this.#triesDiv = this.shadowRoot.querySelector('#triesDiv')
     }
 
@@ -135,7 +143,9 @@ customElements.define('memory-game',
      *
      * @param {Array} cards The cards to use in the game.
      */
+    // I got a lot of help from chatGTP with the gridlogic.
     renderCards (cards) {
+      this.#gameButtons.classList.add('lessHidden')
       this.#triesDiv.classList.add('hidden')
       let count = 1
       const sortedCards = []
@@ -214,6 +224,8 @@ customElements.define('memory-game',
         tries.classList.remove('tries')
         this.playVictorySound()
         this.#triesDiv.classList.remove('hidden')
+        this.#gameButtons.classList.remove('lessHidden')
+        this.#attemptedTries.length = 0
       }
     }
 
@@ -228,12 +240,11 @@ customElements.define('memory-game',
     }
 
     /**
-     * Plays a victorysound if the game is finnished.
+     * Plays a victorysound when the game is finnished.
      *
      */
     playVictorySound () {
       this.#victorySound.play()
-      console.log('spela')
     }
   }
 )

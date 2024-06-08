@@ -9,17 +9,17 @@
 const template = document.createElement('template')
 template.innerHTML = `
 <style>
-    #card {
-        width: 70px;
-        height: 90px;
-        border: solid black;
-        border-radius: 10px;
-        background-image: url('../images/lnu-symbol.png');
-        background-size: cover; /* Bilden täcker hela div */
-        background-position: center; /* Bilden centreras */
-        background-repeat: no-repeat; /* Bilden upprepas inte */
-        display: block;
-    }  
+  #card {
+    width: 70px;
+    height: 90px;
+    border: solid black;
+    border-radius: 10px;
+    background-image: url('../images/lnu-symbol.png');
+    background-size: cover; /* Bilden täcker hela div */
+    background-position: center; /* Bilden centreras */
+    background-repeat: no-repeat; /* Bilden upprepas inte */
+    display: block;
+  }  
 </style>
   <a href="#" id="card" class="card"></a>
 `

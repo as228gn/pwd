@@ -87,7 +87,7 @@ customElements.define('bath-temperature',
         let response = await fetch('https://badplatsen.havochvatten.se/badplatsen/api/feature')
 
         if (!response.ok) {
-          throw new Error('An error occurred while fetching the data. Status code: ' + response.status)
+          throw new Error()
         }
 
         response = await response.json()
@@ -135,7 +135,7 @@ customElements.define('bath-temperature',
         let response = await fetch(`${'https://badplatsen.havochvatten.se/badplatsen/api/detail/'}${nutskod}`)
 
         if (!response.ok) {
-          throw new Error('An error occurred while fetching the data. Status code: ' + response.status)
+          throw new Error()
         }
 
         response = await response.json()

@@ -207,12 +207,20 @@ customElements.define('chat-application',
       const socketMessage = {
         type: 'message',
         data: datas,
-        username: userName, // Replace with actual username logic if needed
-        channel: 'my, not so secret, channel', // Replace with actual channel logic if needed
-        key: apiKey // Replace with actual key logic if needed
+        username: userName,
+        channel: 'my, not so secret, channel',
+        key: apiKey
       }
       this.#socket.send(JSON.stringify(socketMessage))
       this.#message.value = ''
+    }
+
+    /**
+     * Called when element is removed from the DOM.
+     *
+     */
+    disconnectedCallback () {
+      this.#socket.close()
     }
   }
 )

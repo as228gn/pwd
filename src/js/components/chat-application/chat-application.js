@@ -162,13 +162,17 @@ customElements.define('chat-application',
      *
      */
     checkUserName () {
-      const userNames = JSON.parse(window.localStorage.getItem('Username'))
-      if (userNames === '' || userNames === null) {
-        this.#userNameDiv.classList.remove('hidden')
-      } else {
-        const user = this.shadowRoot.querySelector('#user')
-        user.textContent = 'Välkommen ' + userNames + '!'
-        this.#userNameDiv.classList.add('hidden')
+      try {
+        const userNames = JSON.parse(window.localStorage.getItem('Username'))
+        if (userNames === '' || userNames === null) {
+          this.#userNameDiv.classList.remove('hidden')
+        } else {
+          const user = this.shadowRoot.querySelector('#user')
+          user.textContent = 'Välkommen ' + userNames + '!'
+          this.#userNameDiv.classList.add('hidden')
+        }
+      } catch (error) {
+        console.error(error.message)
       }
     }
 
@@ -177,11 +181,15 @@ customElements.define('chat-application',
      *
      */
     collectUserName () {
-      const userName = this.#userName.value
-      window.localStorage.setItem('Username', JSON.stringify(userName))
-      const user = this.shadowRoot.querySelector('#user')
-      user.textContent = 'Välkommen ' + userName + '!'
-      this.#userNameDiv.classList.add('hidden')
+      try {
+        const userName = this.#userName.value
+        window.localStorage.setItem('Username', JSON.stringify(userName))
+        const user = this.shadowRoot.querySelector('#user')
+        user.textContent = 'Välkommen ' + userName + '!'
+        this.#userNameDiv.classList.add('hidden')
+      } catch (error) {
+        console.error(error.message)
+      }
     }
 
     /**
@@ -190,10 +198,14 @@ customElements.define('chat-application',
      * @param {event} event An event that contains the message to put in the chatbox.
      */
     recievedMessage (event) {
-      const answerFromSocket = JSON.parse(event.data)
-      const message = document.createElement('div')
-      message.textContent = answerFromSocket.data
-      this.#chatBox.appendChild(message)
+      try {
+        const answerFromSocket = JSON.parse(event.data)
+        const message = document.createElement('div')
+        message.textContent = answerFromSocket.data
+        this.#chatBox.appendChild(message)
+      } catch (error) {
+        console.error(error.message)
+      }
     }
 
     /**
@@ -201,18 +213,22 @@ customElements.define('chat-application',
      *
      */
     sendMessage () {
-      const datas = this.#message.value
-      const apiKey = 'eDBE76deU7L0H9mEBgxUKVR0VCnq0XBd'
-      const userName = this.#userName.value
-      const socketMessage = {
-        type: 'message',
-        data: datas,
-        username: userName,
-        channel: 'my, not so secret, channel',
-        key: apiKey
+      try {
+        const datas = this.#message.value
+        const apiKey = 'eDBE76deU7L0H9mEBgxUKVR0VCnq0XBd'
+        const userName = this.#userName.value
+        const socketMessage = {
+          type: 'message',
+          data: datas,
+          username: userName,
+          channel: 'my, not so secret, channel',
+          key: apiKey
+        }
+        this.#socket.send(JSON.stringify(socketMessage))
+        this.#message.value = ''
+      } catch (error) {
+        console.error(error.message)
       }
-      this.#socket.send(JSON.stringify(socketMessage))
-      this.#message.value = ''
     }
 
     /**

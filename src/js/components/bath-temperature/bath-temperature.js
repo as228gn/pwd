@@ -53,6 +53,7 @@ customElements.define('bath-temperature',
     #temp
     #algae
     #info
+    #abortController
     /**
      * Creates an instance of the current type.
      */
@@ -64,6 +65,7 @@ customElements.define('bath-temperature',
       this.attachShadow({ mode: 'open' })
         .appendChild(template.content.cloneNode(true))
 
+      this.#abortController = new AbortController()
       this.#dropDown = this.shadowRoot.querySelector('#dropDown')
       this.#temp = this.shadowRoot.querySelector('#temp')
       this.#algae = this.shadowRoot.querySelector('#algae')
@@ -97,7 +99,6 @@ customElements.define('bath-temperature',
         })
         const extractedData = selectedFeatures.map(feature => ({
           NAMN: feature.properties.NAMN,
-          KMN_NAMN: feature.properties.KMN_NAMN,
           NUTSKOD: feature.properties.NUTSKOD
         }))
         this.populateDropdown(extractedData)
@@ -121,7 +122,7 @@ customElements.define('bath-temperature',
         this.#dropDown.appendChild(option)
       })
 
-      this.#dropDown.addEventListener('change', (event) => { this.findBathTemp(event) })
+      this.#dropDown.addEventListener('change', (event) => { this.findBathInfo(event) }, { signal: this.#abortController.signal })
     }
 
     /**
@@ -129,7 +130,7 @@ customElements.define('bath-temperature',
      *
      * @param {event} event An event that contains the value to find the information with.
      */
-    async findBathTemp (event) {
+    async findBathInfo (event) {
       try {
         const nutskod = event.target.value
         let response = await fetch(`${'https://badplatsen.havochvatten.se/badplatsen/api/detail/'}${nutskod}`)
@@ -148,6 +149,14 @@ customElements.define('bath-temperature',
       } catch (error) {
         console.error(error.message)
       }
+    }
+
+    /**
+     * Called when element is removed from the DOM.
+     *
+     */
+    disconnectedCallback () {
+      this.#abortController.abort()
     }
   }
 )

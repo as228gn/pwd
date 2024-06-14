@@ -92,6 +92,7 @@ customElements.define('chat-application',
     #cursive
     #lucida
     #helvetica
+    #abortController
     /**
      * Creates an instance of the current type.
      */
@@ -103,6 +104,7 @@ customElements.define('chat-application',
       this.attachShadow({ mode: 'open' })
         .appendChild(template.content.cloneNode(true))
 
+      this.#abortController = new AbortController()
       this.#message = this.shadowRoot.querySelector('#message')
       this.#sendButton = this.shadowRoot.querySelector('#sendButton')
       this.#chatBox = this.shadowRoot.querySelector('#chatBox')
@@ -119,15 +121,15 @@ customElements.define('chat-application',
      */
     connectedCallback () {
       this.#socket = new window.WebSocket('wss://courselab.lnu.se/message-app/socket', 'charcords')
-      this.#userName.addEventListener('keydown', (event) => { if (event.key === 'Enter') { this.collectUserName() } })
-      this.#userNameButton.addEventListener('click', (event) => { this.collectUserName() })
-      this.#sendButton.addEventListener('click', (event) => { this.sendMessage() })
-      this.#message.addEventListener('keydown', (event) => { if (event.key === 'Enter') { this.sendMessage() } })
-      this.#socket.addEventListener('message', (event) => { this.recievedMessage(event) })
+      this.#userName.addEventListener('keydown', (event) => { if (event.key === 'Enter') { this.collectUserName() } }, { signal: this.#abortController.signal })
+      this.#userNameButton.addEventListener('click', (event) => { this.collectUserName() }, { signal: this.#abortController.signal })
+      this.#sendButton.addEventListener('click', (event) => { this.sendMessage() }, { signal: this.#abortController.signal })
+      this.#message.addEventListener('keydown', (event) => { if (event.key === 'Enter') { this.sendMessage() } }, { signal: this.#abortController.signal })
+      this.#socket.addEventListener('message', (event) => { this.recievedMessage(event) }, { signal: this.#abortController.signal })
       this.checkUserName()
-      this.#cursive.addEventListener('click', (event) => { this.changeCursive() })
-      this.#lucida.addEventListener('click', (event) => { this.changeLucida() })
-      this.#helvetica.addEventListener('click', (event) => { this.changeHelvetica() })
+      this.#cursive.addEventListener('click', (event) => { this.changeCursive() }, { signal: this.#abortController.signal })
+      this.#lucida.addEventListener('click', (event) => { this.changeLucida() }, { signal: this.#abortController.signal })
+      this.#helvetica.addEventListener('click', (event) => { this.changeHelvetica() }, { signal: this.#abortController.signal })
     }
 
     /**
@@ -237,6 +239,7 @@ customElements.define('chat-application',
      */
     disconnectedCallback () {
       this.#socket.close()
+      this.#abortController.abort()
     }
   }
 )

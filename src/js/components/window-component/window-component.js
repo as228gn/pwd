@@ -67,7 +67,6 @@ customElements.define('window-component',
       this.attachShadow({ mode: 'open' })
         .appendChild(template.content.cloneNode(true))
 
-      this.#abortController = new AbortController()
       this.#window = this.shadowRoot.querySelector('.window')
       this.#header = this.shadowRoot.querySelector('.header')
       this.#close = this.shadowRoot.querySelector('.close')
@@ -79,8 +78,7 @@ customElements.define('window-component',
     connectedCallback () {
       this.#header.addEventListener('mousedown', (event) => { this.dragMouseDown(event) })
       this.#close.addEventListener('click', (event) => { this.removeFromDom(event) })
-      const component = this
-      component.addEventListener('click', (event) => { this.focusOnClick() })
+      this.addEventListener('click', (event) => { this.focusOnClick() })
     }
 
     /**
@@ -88,8 +86,8 @@ customElements.define('window-component',
      *
      */
     removeFromDom () {
-      const component = this
-      component.parentNode.removeChild(component)
+      this.parentNode.removeChild(this)
+      this.#abortController.abort()
     }
 
     /**
@@ -97,12 +95,12 @@ customElements.define('window-component',
      *
      */
     focusOnClick () {
-      const ev = new CustomEvent('zIndex', {
+      const event = new CustomEvent('zIndex', {
         bubbles: true,
         composed: true
       })
 
-      this.dispatchEvent(ev)
+      this.dispatchEvent(event)
     }
 
     /**

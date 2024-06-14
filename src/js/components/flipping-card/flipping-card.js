@@ -30,6 +30,7 @@ customElements.define('flipping-card',
    */
   class extends HTMLElement {
     #card
+    #abortController
 
     /**
      * Creates an instance of the current type.
@@ -42,6 +43,7 @@ customElements.define('flipping-card',
       this.attachShadow({ mode: 'open' })
         .appendChild(template.content.cloneNode(true))
 
+      this.#abortController = new AbortController()
       this.#card = this.shadowRoot.querySelector('#card')
     }
 
@@ -49,7 +51,7 @@ customElements.define('flipping-card',
      * Eventlistener.
      */
     connectedCallback () {
-      this.#card.addEventListener('click', (event) => { this.flipHandler() })
+      this.#card.addEventListener('click', (event) => { this.flipHandler() }, { signal: this.#abortController.signal })
     }
 
     /**
@@ -63,6 +65,14 @@ customElements.define('flipping-card',
       const ev = new CustomEvent('checkCard',
         { detail: { card: image, cardId: id } })
       this.dispatchEvent(ev)
+    }
+
+    /**
+     * Called when element is removed from the DOM.
+     *
+     */
+    disconnectedCallback () {
+      this.#abortController.abort()
     }
   }
 )

@@ -89,6 +89,7 @@ customElements.define('memory-game',
     #victorySound
     #gameButtons
     #triesDiv
+    #abortController
     #cards16 = [
       '../images/0.png',
       '../images/1.png',
@@ -120,6 +121,7 @@ customElements.define('memory-game',
       this.attachShadow({ mode: 'open' })
         .appendChild(template.content.cloneNode(true))
 
+      this.#abortController = new AbortController()
       this.#game = this.shadowRoot.querySelector('#game')
       this.#game16 = this.shadowRoot.querySelector('#game16')
       this.#game8 = this.shadowRoot.querySelector('#game8')
@@ -133,9 +135,9 @@ customElements.define('memory-game',
      * Eventlisteners.
      */
     connectedCallback () {
-      this.#game16.addEventListener('click', (event) => { this.renderCards(this.#cards16) })
-      this.#game8.addEventListener('click', (event) => { this.renderCards(this.#cards8) })
-      this.#game4.addEventListener('click', (event) => { this.renderCards(this.#cards4) })
+      this.#game16.addEventListener('click', (event) => { this.renderCards(this.#cards16) }, { signal: this.#abortController.signal })
+      this.#game8.addEventListener('click', (event) => { this.renderCards(this.#cards8) }, { signal: this.#abortController.signal })
+      this.#game4.addEventListener('click', (event) => { this.renderCards(this.#cards4) }, { signal: this.#abortController.signal })
     }
 
     /**
@@ -176,7 +178,7 @@ customElements.define('memory-game',
         card.style.gridRow = row
         card.style.gridColumn = col
         this.#game.appendChild(card)
-        card.addEventListener('checkCard', (event) => { this.checkImages(event) })
+        card.addEventListener('checkCard', (event) => { this.checkImages(event) }, { signal: this.#abortController.signal })
       })
     }
 
@@ -245,6 +247,14 @@ customElements.define('memory-game',
      */
     playVictorySound () {
       this.#victorySound.play()
+    }
+
+    /**
+     * Called when element is removed from the DOM.
+     *
+     */
+    disconnectedCallback () {
+      this.#abortController.abort()
     }
   }
 )

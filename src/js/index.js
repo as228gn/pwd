@@ -28,8 +28,8 @@ document.addEventListener('zIndex', (event) => {
   event.target.shadowRoot.querySelector('.window').style.zIndex = highestIndex
 })
 
-const windowComponentButton = document.getElementById('bathButton')
-windowComponentButton.addEventListener('click', () => {
+const bathButton = document.getElementById('bathButton')
+bathButton.addEventListener('click', () => {
   const newWindow = document.createElement('window-component')
   const newMemory = document.createElement('bath-temperature')
   const content = newWindow.shadowRoot.querySelector('.content')
